@@ -3,8 +3,14 @@
 An attempt at creating an evaluator for the Rho Calculus. It might not be fully
 compliant (I did not read the papers in detail). Currently in a fairly stable
 state. It can eval expressions like `(Pair a b -> a , Pair a b -> b) (Pair x
-y)`, which would become `(x , y)`. In Haskell, that would be something like
-`(\p -> [fst p, snd p]) ("x", "y")` (with some big differences).
+y)`, which would become `(x , y)`. In Haskell, that would be something like this
+(with the difference that a matching failure would be an error):
+
+```haskell
+-- data Pair a = Pair a a
+-- appChoice = flip (fmap . flip ($))
+[\(Pair a b) -> a, \(Pair a b) -> b] `appChoice` Pair "x" "y"
+```
 
 `Main.hs` can be used from the command line to test it:
 
