@@ -13,9 +13,9 @@ reduce t@(Con _ _)              = t
 reduce   (App e e')             = reduceApp e e'
 
 reduceApp :: Expr -> Expr -> Expr
-reduceApp (Var e) e'            = App (Var e) e'
 reduceApp Null _                = Null
-reduceApp t@(App (Var _) _) _   = t
+reduceApp e@(Var _) e'          = App e e'
+reduceApp e@(App (Var _) _) e'  = App e e'
 reduceApp (App a b) c           = reduceApp (reduceApp a b) c
 reduceApp (Struc es) e          = Struc (map (`reduceApp` e) es)
 reduceApp (Con e es) e'         = Con e (es ++ [reduce e'])
