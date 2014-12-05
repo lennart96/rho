@@ -13,13 +13,13 @@ reduce t@(Var _)                = t
 reduce t@(Rho _ _)              = t
 reduce t@Stk                    = t
 reduce t@(Con _ _)              = t
-reduce t@(Struc es)             = t -- reduceStruc es
+reduce   (Struc es)             = reduceStruc es
 reduce   (App e e')             = reduceApp e e'
 
 reduceStruc :: [Expr] -> Expr
 reduceStruc []                  = Stk
 reduceStruc [e]                 = e
-reduceStruc es = case filter isStk es of
+reduceStruc es = case filter (not . isStk) es of
             []                  -> Stk
             [e']                -> e'
             es'                 -> Struc es'
