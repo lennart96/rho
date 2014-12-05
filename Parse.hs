@@ -15,8 +15,8 @@ term    = sp $ (char '(' *> struc <* char ')') <|> stk <|> var <|> con
 app     = sp $ foldl1 App <$> many1 term
 rho     = sp $ app `chainr1` (Rho <$ string "->")
 struc   = sp $ rho `sepBy1` char ',' >>= \xs -> return $ case xs of
-                [x] -> x
-                xs  -> Struc xs
+                [e] -> e
+                es  -> Struc es
 
 sp :: Parser Expr -> Parser Expr
 sp = (skipMany space *>) . (<* skipMany space)

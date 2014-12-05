@@ -2,7 +2,6 @@ module Main(main) where
 
 import System.Environment (getArgs)
 
-import Expr
 import Eval
 import Parse
 
