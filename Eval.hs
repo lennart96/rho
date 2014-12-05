@@ -12,7 +12,6 @@ reduce t@(Struc _)          = t
 reduce t@(Con _ _)          = t
 reduce   (App e e')         = reduceApp e e'
 
-
 reduceApp :: Expr -> Expr -> Expr
 reduceApp (Var e) e'        = App (Var e) e'
 reduceApp Null _            = Null
@@ -48,6 +47,4 @@ match (Con e es) (Con e' es')   | e == e' && length es == length es' = zipMatch 
 match p t@(App _ _)             = match p (reduce t)
 match p@(App _ _) t             = match (reduce p) t
 match _ _                       = Nothing
-
-
 

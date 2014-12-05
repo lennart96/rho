@@ -5,7 +5,6 @@ import Text.ParserCombinators.Parsec as Parsec
 
 import Expr
 
-
 var, nil, con :: Parser Expr
 var     = (Var .). (:) <$> lower <*> many letter
 nil     = Null <$ string "null"
@@ -18,7 +17,6 @@ rho     = sp $ app `chainr1` (Rho <$ string "->")
 struc   = sp $ rho `sepBy1` char ',' >>= \xs -> return $ case xs of
                 [x] -> x
                 xs  -> Struc xs
-
 
 sp :: Parser Expr -> Parser Expr
 sp = (skipMany space *>) . (<* skipMany space)

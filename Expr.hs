@@ -18,3 +18,4 @@ instance Show Expr where
     showsPrec _ (App e1 e2) = showString $ concat ["(", show e1, " ",    show e2, ")"]
     showsPrec _ (Con c e)   = showString $ "(" ++ unwords (c:map show e) ++ ")"
     showsPrec _ (Struc e)   = showString $ "(" ++ unwords (intersperse "," $ map show e) ++ ")"
+
