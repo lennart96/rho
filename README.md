@@ -30,4 +30,14 @@ $ ./Main "(a -> a -> Eq) A B"
 Right stk
 ```
 
+More useful example:
+
+```shell
+$ ./Main "(a -> b -> (Eq->True,stk->False) ((x->x->Eq)a b)) A A"
+Right (True)
+$ ./Main "(a -> b -> (Eq->True,stk->False) ((x->x->Eq)a b)) A B"
+Right (False)
+```
+
+
 
