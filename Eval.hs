@@ -5,32 +5,33 @@ import Control.Monad (liftM2)
 import Expr
 
 reduce :: Expr -> Expr
-reduce t@(Var _)            = t
-reduce t@(Rho _ _)          = t
-reduce t@Null               = t
-reduce t@(Struc _)          = t
-reduce t@(Con _ _)          = t
-reduce   (App e e')         = reduceApp e e'
+reduce t@(Var _)                = t
+reduce t@(Rho _ _)              = t
+reduce t@Null                   = t
+reduce t@(Struc _)              = t
+reduce t@(Con _ _)              = t
+reduce   (App e e')             = reduceApp e e'
 
 reduceApp :: Expr -> Expr -> Expr
-reduceApp (Var e) e'        = App (Var e) e'
-reduceApp Null _            = Null
-reduceApp (App a b) c       = reduceApp (reduceApp a b) c
-reduceApp (Struc es) e      = Struc (map (`reduceApp` e) es)
-reduceApp (Con e es) e'     = Con e (es ++ [reduce e'])
-reduceApp (Rho pat e) e'    = maybe Null
-                            ( reduce . flip (foldl (.) id . map substitute) e)
-                            $ match pat e'
+reduceApp (Var e) e'            = App (Var e) e'
+reduceApp Null _                = Null
+reduceApp t@(App (Var _) _) _   = t
+reduceApp (App a b) c           = reduceApp (reduceApp a b) c
+reduceApp (Struc es) e          = Struc (map (`reduceApp` e) es)
+reduceApp (Con e es) e'         = Con e (es ++ [reduce e'])
+reduceApp (Rho pat e) e'        = maybe Null
+                                ( reduce . flip (foldl (.) id . map substitute) e)
+                                $ match pat e'
 
 
 substitute :: (String, Expr) -> Expr -> Expr
-substitute _ Null           = Null
-substitute (n, s) t@(Var e) | n == e = s
-                            | otherwise = t
-substitute t (Rho p e)      = Rho (substitute t p) (substitute t e)
-substitute t (App e e')     = App (substitute t e) (substitute t e')
-substitute t (Struc es)     = Struc (map (substitute t) es)
-substitute t (Con n es)     = Con n (map (reduce . substitute t) es)
+substitute _ Null               = Null
+substitute (n, s) t@(Var e)     | n == e = s
+                                | otherwise = t
+substitute t (Rho p e)          = Rho (substitute t p) (substitute t e)
+substitute t (App e e')         = App (substitute t e) (substitute t e')
+substitute t (Struc es)         = Struc (map (substitute t) es)
+substitute t (Con n es)         = Con n (map (reduce . substitute t) es)
 
 
 type Match = Maybe [(String, Expr)]
