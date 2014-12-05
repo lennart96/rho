@@ -21,7 +21,7 @@ $ ./Main "("
 Left [...]
 ```
 It is completely untyped, so `Cons a b` is just as valid as `Cons a Nil Cons d e Nil g`.
-I also added rewriting of patterns, not sure if that is in the real calculus:
+I also added name substitution in patterns, not sure if that is in the real calculus:
 
 ```shell
 $ ./Main "(a -> a -> Eq) A A"
