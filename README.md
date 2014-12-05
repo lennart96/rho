@@ -16,7 +16,7 @@ $ ghc Main
 $ ./Main "(Cons a b -> a) (Cons x Nil)"
 Right x
 $ ./Main "(Cons a b -> a) Nil"
-Right null
+Right stk
 $ ./Main "("
 Left [...]
 ```
@@ -27,7 +27,7 @@ I also added rewriting of patterns, not sure if that is in the real calculus:
 $ ./Main "(a -> a -> Eq) A A"
 Right (Eq)
 $ ./Main "(a -> a -> Eq) A B"
-Right null
+Right stk
 ```
 
 
