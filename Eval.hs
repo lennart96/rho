@@ -7,25 +7,25 @@ import Expr
 reduce :: Expr -> Expr
 reduce t@(Var _)                = t
 reduce t@(Rho _ _)              = t
-reduce t@Null                   = t
+reduce t@Stk                    = t
 reduce t@(Struc _)              = t
 reduce t@(Con _ _)              = t
 reduce   (App e e')             = reduceApp e e'
 
 reduceApp :: Expr -> Expr -> Expr
-reduceApp Null _                = Null
+reduceApp Stk _                 = Stk
 reduceApp e@(Var _) e'          = App e e'
 reduceApp e@(App (Var _) _) e'  = App e e'
 reduceApp (App a b) c           = reduceApp (reduceApp a b) c
 reduceApp (Struc es) e          = Struc (map (`reduceApp` e) es)
 reduceApp (Con e es) e'         = Con e (es ++ [reduce e'])
-reduceApp (Rho pat e) e'        = maybe Null
+reduceApp (Rho pat e) e'        = maybe Stk
                                 ( reduce . flip (foldl (.) id . map substitute) e)
                                 $ match pat e'
 
 
 substitute :: (String, Expr) -> Expr -> Expr
-substitute _ Null               = Null
+substitute _ Stk                = Stk
 substitute (n, s) t@(Var e)     | n == e = s
                                 | otherwise = t
 substitute t (Rho p e)          = Rho (substitute t p) (substitute t e)
@@ -39,13 +39,13 @@ type Match = Maybe [(String, Expr)]
 zipMatch :: [Expr] -> [Expr] -> Match
 zipMatch = (foldl (liftM2 (++)) (Just []) .). zipWith match
 
--- first argument is pattern
 match :: Expr -> Expr -> Match
-match Null Null                 = Just []
-match (Var a) b                 = Just [(a, b)]
-match (Struc es) (Struc es')    | length es == length es' = zipMatch es es'
-match (Con e es) (Con e' es')   | e == e' && length es == length es' = zipMatch es es'
-match p t@(App _ _)             = match p (reduce t)
-match p@(App _ _) t             = match (reduce p) t
-match _ _                       = Nothing
+ --   pattern      term
+match Stk          Stk           = Just []
+match (Var a)      b             = Just [(a, b)]
+match (Struc es)   (Struc es')   | length es == length es' = zipMatch es es'
+match (Con e es)   (Con e' es')  | e == e' && length es == length es' = zipMatch es es'
+match p            t@(App _ _)   = match p (reduce t)
+match p@(App _ _)  t             = match (reduce p) t
+match _            _             = Nothing
 
