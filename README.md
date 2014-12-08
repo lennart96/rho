@@ -34,7 +34,8 @@ Left [...]
 It is completely untyped, so `Cons a b` is just as valid as `Cons a Nil Cons d
 e Nil g`. I also added name substitution in patterns, not sure if that is in
 the real calculus. At the moment is seems to give problems in more complex
-expressions. Small example:
+expressions. (I have found a solution, as-patterns, but I do not have the
+time to implement that this weekend.) Small example:
 
 ```shell
 $ ./Main "(a -> a -> Eq) A A"
