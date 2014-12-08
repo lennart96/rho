@@ -1,5 +1,11 @@
 # Rho Calculus
 
+I just realized there are a lot more problems with than I thought, and I am not
+planning to fix them anytime soon, but it is still usable for small
+experiments, for which I wrote this.
+
+---
+
 An attempt at creating an evaluator for the Rho Calculus. It might not be fully
 compliant (I did not read the papers in detail). Currently in a fairly stable
 state. It can eval expressions like `(Pair a b -> a , Pair a b -> b) (Pair x
